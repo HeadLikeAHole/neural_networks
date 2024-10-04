@@ -66,3 +66,7 @@ func (a *ActivationSoftmax) Forward(inputs *mat.Dense) {
 		return v / rowSums[j]
 	}, expVals)
 }
+
+func (a *ActivationSoftmax) Backward(dValues *mat.Dense) *mat.Dense {
+	return nil
+}

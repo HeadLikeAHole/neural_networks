@@ -17,12 +17,32 @@ func ToDense(data [][]float64) *mat.Dense {
 }
 
 // SliceToMat converts [1, 3, 2] to [[1, 3, 2], [1, 3, 2], ...]
-func SliceToMat(nRows, nCols int, data []float64) *mat.Dense {
-	var biasesData []float64
+func SliceToMat(nRows, nCols int, s []float64) *mat.Dense {
+	var data []float64
 	for i := 0; i < nRows; i++ {
-		biasesData = append(biasesData, data...)
+		data = append(data, s...)
 	}
-	return mat.NewDense(nRows, nCols, biasesData)
+	return mat.NewDense(nRows, nCols, data)
+}
+
+// SliceToOneHotMat converts [1, 0, 2] to [[0, 1, 0], [1, 0, 0], [0, 0, 1]]]
+func SliceToOneHotMat(s []float64) *mat.Dense {
+	sLen := len(s)
+	data := make([]float64, sLen*sLen)
+	for i := 0; i < sLen; i++ {
+		hotIndex := int(s[i])
+		if hotIndex >= sLen {
+			panic("SliceToOneHotMat: hot-one index is out of range")
+		}
+		for j := 0; j < sLen; j++ {
+			if j == hotIndex {
+				data[sLen*i+j] = 1
+			} else {
+				data[sLen*i+j] = 0
+			}
+		}
+	}
+	return mat.NewDense(sLen, sLen, data)
 }
 
 func RandSlice(min, max float64, size int) []float64 {
@@ -216,4 +236,8 @@ func Convert2DSlice[T, V Number](s [][]T) [][]V {
 		newSlice[i] = ConvertSlice[T, V](s[i])
 	}
 	return newSlice
+}
+
+func KroneckerDelta() {
+	
 }
